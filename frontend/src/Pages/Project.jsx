@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import PrismCode from '../Components/PrismCode'
 
 const Project = () => {
     const params = useParams();
-    const [projectId, setProjectId] = useState(params.projectId);
+    const [projectId] = useState(params.projectId);
     const [socket, setSocket] = useState(null);
     const [messages, setMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState('');
+    const [code, setCode] = useState(`Start Coding here...\n`)
+
 
     const appendMessage = (msg) => {
-        setMessages([...messages, msg]);
+        setMessages(prevMessages => [...prevMessages, msg]);
     };
 
     useEffect(() => {
-        const tempSocket = io('http://localhost:3000/', {
+        const tempSocket = io('https://7kc930b1-3000.inc1.devtunnels.ms', {
             query: { projectId }
         });
 
@@ -23,7 +26,9 @@ const Project = () => {
         });
 
         setSocket(tempSocket);
-    }, []);
+
+        return () => tempSocket.disconnect(); // Cleanup on unmount
+    }, [projectId]);
 
     return (
         <main className="flex h-screen bg-zinc-900 text-white">
@@ -47,9 +52,11 @@ const Project = () => {
                     />
                     <button
                         onClick={() => {
-                            socket.emit('message', currentMessage);
-                            appendMessage(currentMessage);
-                            setCurrentMessage('');
+                            if (socket && currentMessage.trim()) {
+                                socket.emit('message', currentMessage);
+                                appendMessage(currentMessage);
+                                setCurrentMessage('');
+                            }
                         }}
                         className="p-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-500 transition"
                     >
@@ -61,7 +68,10 @@ const Project = () => {
             {/* Middle Section - Code (50%) */}
             <div className="w-1/2 h-full bg-zinc-900 p-4 border-r border-zinc-700 flex flex-col">
                 <h2 className="text-xl font-semibold mb-4">Code</h2>
-                <div className="flex-1 bg-zinc-700 p-4 rounded-lg">Your code here...</div>
+                <div className="flex-1 bg-zinc-700 p-4 rounded-lg overflow-y-scroll">
+                    <PrismCode setCode={setCode} code={code} language="javascript" />
+                    
+                </div>
             </div>
 
             {/* Right Section - Review (25%) */}

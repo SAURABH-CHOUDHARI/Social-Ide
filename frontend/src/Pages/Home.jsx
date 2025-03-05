@@ -13,7 +13,7 @@ const Home = () => {
         e.preventDefault();
         setIsModalOpen(false);
 
-        axios.post('http://localhost:3000/v1/api/project/create', {
+        axios.post('https://7kc930b1-3000.inc1.devtunnels.ms/v1/api/project/create', {
             name: projectName,
         })
             .then(() => {
@@ -23,7 +23,7 @@ const Home = () => {
     }
 
     function getProjects() {
-        axios.get('http://localhost:3000/v1/api/project/list')
+        axios.get('https://7kc930b1-3000.inc1.devtunnels.ms/v1/api/project/list')
             .then((response) => {
                 setProjects(response.data.projects);
             });
