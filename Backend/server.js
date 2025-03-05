@@ -14,9 +14,8 @@ const io = require('socket.io')(server,{
 io.on('connection', socket => {
 
     const projectId = socket.handshake.query.projectId
-
+    
     socket.join(projectId)
-
     socket.on('message', msg => {
         socket.broadcast.to(projectId).emit('message', msg)
     })
