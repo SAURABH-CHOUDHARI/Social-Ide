@@ -1,3 +1,4 @@
+const config  = require('./src/config/config')
 const app =require("./src/app")
 const conncectDB = require('./src/db/db')
 
@@ -24,6 +25,6 @@ io.on('connection', socket => {
 });
 
 
-server.listen(3000, () => {
+server.listen(config.PORT, () => {
     console.log('Server is running on port 3000');
 });

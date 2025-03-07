@@ -1,7 +1,8 @@
+const config = require('../config/config')
 const mongoose = require("mongoose");
 
 const conncectDB = ()=>{
-    mongoose.connect("mongodb://127.0.0.1:27017/kodr")
+    mongoose.connect(config.MONGO_URL)
     .then(()=>{
         console.log("Connceted to DataBase")
     })

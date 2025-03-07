@@ -15,3 +15,10 @@ module.exports.list = async (req,res) => {
     const projects = await projectModel.find();
     res.status(200).json({projects})
 }
+
+module.exports.review = (req, res) => {
+    if (!req.review) {
+        return res.status(500).json({ error: "Failed to generate review" });
+    }
+    res.json({ review: req.review });
+};
